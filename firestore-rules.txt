@@ -1,0 +1,54 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Users can only access their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Workouts
+    match /workouts/{workoutId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+    }
+    
+    // Workout logs
+    match /workoutLogs/{logId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+    }
+    
+    // Meals
+    match /meals/{mealId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+    }
+    
+    // Weight logs
+    match /weightLogs/{logId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+    }
+    
+    // Measurements
+    match /measurements/{measurementId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+    }
+    
+    // Progress photos (stored as data in Firestore instead of Storage)
+    match /progressPhotos/{photoId} {
+      allow read, write: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+    }
+    
+    // Public data (exercises, foods)
+    match /exercises/{exerciseId} {
+      allow read: if true;
+    }
+    
+    match /foods/{foodId} {
+      allow read: if true;
+    }
+  }
+} 
